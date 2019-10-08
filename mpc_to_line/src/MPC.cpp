@@ -11,8 +11,8 @@ using Eigen::VectorXd;
 /**
  * TODO: Set N and dt
  */
-size_t N = ? ;
-double dt = ? ;
+size_t N = 10;
+double dt = 0.1;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -60,7 +60,14 @@ class FG_eval {
      * TODO: Define the cost related the reference state and
      *   anything you think may be beneficial.
      */
-
+    for (int t = 0; t < N-1; t++){
+      fg[0] += pow(vars[cte_start+t], 2);
+      fg[0] += pow(vars[epsi_start+t], 2);
+      fg[0] += pow(vars[v_start+t] - ref_v, 2);
+      fg[0] += pow(vars[delta_start+t], 2);
+      fg[0] += pow(vars[delta_start+t+1] - vars[delta_start+t], 2);
+      fg[0] += pow(vars[a_start+t+1] - vars[a_start+t], 2);
+    }
 
     //
     // Setup Constraints
@@ -100,7 +107,7 @@ class FG_eval {
       /**
        * TODO: Setup the rest of the model constraints
        */
-      
+
       fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
 
     }
