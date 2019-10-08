@@ -23,7 +23,7 @@ int main() {
   /**
    * TODO: fit a polynomial to the above x and y coordinates
    */
-  auto coeffs = ? ;
+  auto coeffs = polyfit(ptsx, ptsy, 3);
 
   // NOTE: free feel to play around with these
   double x = -1;
@@ -33,11 +33,17 @@ int main() {
   /**
    * TODO: calculate the cross track error
    */
-  double cte = ? ;
+  double f_x = polyeval(coeffs, x);
+  double derivative_coeffs = 3*coeffs(3)*x*x + 2*coeffs(2)*x + coeffs(1);
+  double desired_psi = atan(derivative_coeffs);
+  double pre_epsi = psi - desired_psi;
+  
+  double cte = f_x - y + v * sin(epsi) * mpc.dt;
+
   /**
    * TODO: calculate the orientation error
    */
-  double epsi = ? ;
+  double epsi = pre_epsi + (v/mpc.Lf) * mpc.delta_start * mpc.dt;
 
   VectorXd state(6);
   state << x, y, psi, v, cte, epsi;
