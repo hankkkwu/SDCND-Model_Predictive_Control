@@ -34,16 +34,14 @@ int main() {
    * TODO: calculate the cross track error
    */
   double f_x = polyeval(coeffs, x);
-  double derivative_coeffs = 3*coeffs(3)*x*x + 2*coeffs(2)*x + coeffs(1);
-  double desired_psi = atan(derivative_coeffs);
-  double pre_epsi = psi - desired_psi;
-  
-  double cte = f_x - y + v * sin(epsi) * mpc.dt;
+  double cte = f_x - y;
 
   /**
    * TODO: calculate the orientation error
    */
-  double epsi = pre_epsi + (v/mpc.Lf) * mpc.delta_start * mpc.dt;
+  double derivative_coeffs = 3*coeffs(3)*x*x + 2*coeffs(2)*x + coeffs(1);
+  double desired_psi = atan(derivative_coeffs);
+  double epsi = psi - desired_psi;
 
   VectorXd state(6);
   state << x, y, psi, v, cte, epsi;
