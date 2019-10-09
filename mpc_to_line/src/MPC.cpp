@@ -60,13 +60,19 @@ class FG_eval {
      * TODO: Define the cost related the reference state and
      *   anything you think may be beneficial.
      */
+    for (int t = 0; t < N; t++){
+      fg[0] += CppAD::pow(vars[cte_start+t], 2);
+      fg[0] += CppAD::pow(vars[epsi_start+t], 2);
+      fg[0] += CppAD::pow(vars[v_start+t] - ref_v, 2);
+    }
     for (int t = 0; t < N-1; t++){
-      fg[0] += pow(vars[cte_start+t], 2);
-      fg[0] += pow(vars[epsi_start+t], 2);
-      fg[0] += pow(vars[v_start+t] - ref_v, 2);
-      fg[0] += pow(vars[delta_start+t], 2);
-      fg[0] += pow(vars[delta_start+t+1] - vars[delta_start+t], 2);
-      fg[0] += pow(vars[a_start+t+1] - vars[a_start+t], 2);
+      fg[0] += CppAD::pow(vars[delta_start+t], 2);
+      fg[0] += CppAD::pow(vars[a_start+t], 2);
+    }
+
+    for (int t = 0; t < N-2; t++){
+      fg[0] += CppAD::pow(vars[delta_start+t+1] - vars[delta_start+t], 2);
+      fg[0] += CppAD::pow(vars[a_start+t+1] - vars[a_start+t], 2);
     }
 
     //
@@ -93,11 +99,23 @@ class FG_eval {
        *   We have given you parts of these states below.
        */
       AD<double> x1 = vars[x_start + t];
+      AD<double> y1 = vars[y_start + t];
+      AD<double> psi1 = vars[psi_start + t];
+      AD<double> v1 = vars[v_start + t];
+      AD<double> cte1 = vars[cte_start + t];
+      AD<double> epsi1 = vars[epsi_start + t];
 
       AD<double> x0 = vars[x_start + t - 1];
+      AD<double> y0 = vars[y_start + t - 1];
       AD<double> psi0 = vars[psi_start + t - 1];
       AD<double> v0 = vars[v_start + t - 1];
+      AD<double> cte0 = vars[cte_start + t - 1];
+      AD<double> epsi0 = vars[epsi_start + t - 1];
+      AD<double> delta0 = vars[delta_start + t - 1];
+      AD<double> a0 = vars[a_start + t - 1];
 
+      AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0, 2) + coeffs[3] * CppAD::pow(x0, 3);
+      AD<double> desired_psi0 = CppAD::atan(coeffs[1:])
       // Here's `x` to get you started.
       // The idea here is to constraint this value to be 0.
       //
@@ -109,7 +127,11 @@ class FG_eval {
        */
 
       fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
-
+      fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
+      fg[1 + psi_start + t] = psi1 - (psi0 + v0 / Lf * delta0 * dt);
+      fg[1 + v_start + t] = v1 - (v0 + a0 * dt);
+      fg[1 + cte_start + t] = cte1 - (f0 - y0 + v0 * CppAD::sin(epsi0) *dt);
+      fg[1 + epsi_start + t] = epsi1 - (psi0 - desired_psi0 + v0 / Lf * delta0 * dt);
     }
   }
 };
