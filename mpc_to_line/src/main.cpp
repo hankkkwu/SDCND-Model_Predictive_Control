@@ -23,7 +23,7 @@ int main() {
   /**
    * TODO: fit a polynomial to the above x and y coordinates
    */
-  auto coeffs = polyfit(ptsx, ptsy, 3);
+  auto coeffs = polyfit(ptsx, ptsy, 1);
 
   // NOTE: free feel to play around with these
   double x = -1;
@@ -39,7 +39,7 @@ int main() {
   /**
    * TODO: calculate the orientation error
    */
-  double derivative_coeffs = 3*coeffs(3)*x*x + 2*coeffs(2)*x + coeffs(1);
+  double derivative_coeffs = coeffs(1);
   double desired_psi = atan(derivative_coeffs);
   double epsi = psi - desired_psi;
 
