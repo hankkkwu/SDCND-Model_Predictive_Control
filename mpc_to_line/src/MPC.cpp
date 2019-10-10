@@ -12,8 +12,8 @@ using std::vector;
 /**
  * TODO: Set N and dt
  */
-size_t N = 10;
-double dt = 0.1;
+size_t N = 20;
+double dt = 0.05;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -71,8 +71,17 @@ class FG_eval {
       fg[0] += CppAD::pow(vars[a_start+t], 2);
     }
 
+    /*
+    multiply by a value > 1 will influebce the solver into keeping sequential
+    steering values closer together.
+    In general, we want the steering angle values to be smooth. If the vehicle is
+    behaving erratically it's likely there will be spikes in the steering angle
+    value graph and its one indication you should tune the cost function.
+    */
     for (int t = 0; t < N-2; t++){
-      fg[0] += CppAD::pow(vars[delta_start+t+1] - vars[delta_start+t], 2);
+      // multiply steering value by 1000 in the cost function results in a
+      // smoother steering transitions.
+      fg[0] += 1000 * CppAD::pow(vars[delta_start+t+1] - vars[delta_start+t], 2);
       fg[0] += CppAD::pow(vars[a_start+t+1] - vars[a_start+t], 2);
     }
 
@@ -144,7 +153,7 @@ class FG_eval {
       jac = f.Jacobian(x);       // Jacobian for operation sequence
       AD<double> desired_psi0 = CppAD::atan(jac[0]);
       */
-      
+
       // Here's `x` to get you started.
       // The idea here is to constraint this value to be 0.
       // NOTE: The use of `AD<double>` and use of `CppAD`!
