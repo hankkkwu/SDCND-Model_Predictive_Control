@@ -61,17 +61,17 @@ In addition, to display plots, an X-server must be running on the host and acces
      - object was probably modified after being freed.
      *** set a breakpoint in malloc_error_break to debug
      ```
-     This error has been resolved by updrading ipopt with
-     ```brew upgrade ipopt --with-openblas```
+     This error has been resolved by updrading ipopt with `brew upgrade ipopt --with-openblas`
      per this [forum post](https://discussions.udacity.com/t/incorrect-checksum-for-freed-object/313433/19)
 
-*  ** I have experienced the following error when run ```./mpc``` **
-     ``` ./mpc: error while loading shared libraries: libcoinmumps.so.1: cannot open shared object file: No such file or directory
+*  **I have experienced the following error when run ```./mpc```**
+     ```
+     ./mpc: error while loading shared libraries: libcoinmumps.so.1: cannot open shared object file: No such file or directory
      ```
      I did the following steps to resolved the problem:
-     1. Download the "libcoinmumps.so.1" file from [here](https://forge.scilab.org/index.php/p/sci-ipopt/source/tree/87d40abff2e10dfa799dab2962e52179a2596cc1/thirdparty/Linux/lib/x64)
-     2. Drop it into the ```Ipopt-3.12.13\ThirdParty\Mumps``` directory
-     3. Run ```sudo /sbin/ldconfig -v```.   [reference url](https://itsfoss.com/solve-open-shared-object-file-quick-tip/)
+     * Download the "libcoinmumps.so.1" file from [here](https://forge.scilab.org/index.php/p/sci-ipopt/source/tree/87d40abff2e10dfa799dab2962e52179a2596cc1/thirdparty/Linux/lib/x64)
+     * Drop it into the ```Ipopt-3.12.13\ThirdParty\Mumps``` directory
+     * Run ```sudo /sbin/ldconfig -v```.   [reference url](https://itsfoss.com/solve-open-shared-object-file-quick-tip/)
 
 ** Useful Resources:**
 
