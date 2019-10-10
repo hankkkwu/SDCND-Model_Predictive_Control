@@ -18,16 +18,16 @@ At this point in the curriculum students will have set up their SDC Term 2 envir
     ```
 
   - **For Linux and Windows Ubuntu BASH** installs, please try ```./install-ubuntu-MPC.sh```.  This will install all dependencies and only installation of an Xserver (Windows) should be necessary.  The individual steps have been included for reference.  Please note that for any particular command, including execution of ```.sh``` scripts, it may be necessary to add ```sudo``` prior to the command.  It is also a good practice to run ```sudo apt-get update``` prior to installation of new libraries.
-  
+
   * **Linux:**
     * ```sudo apt-get install gfortran```
     *  ```apt-get install unzip```
-    * ```wget https://www.coin-or.org/download/source/Ipopt/Ipopt-3.12.7.zip && unzip Ipopt-3.12.7.zip && rm Ipopt-3.12.7.zip```
-    * Call `install_ipopt.sh` with the source directory as the first argument, ex: ```./install_ipopt.sh Ipopt-3.12.7``` or ```bash install_ipopt.sh Ipopt-3.12.7```
+    * ```wget https://www.coin-or.org/download/source/Ipopt/Ipopt-3.12.7.zip && unzip Ipopt-3.12.13.zip && rm Ipopt-3.12.13.zip```
+    * Call `install_ipopt.sh` with the source directory as the first argument, ex: ```./install_ipopt.sh Ipopt-3.12.13``` or ```bash install_ipopt.sh Ipopt-3.12.13```. If these 2 commands do not work, try ```sudo ./install_ipopt.sh Ipopt-3.12.13```
 
   * **Windows:** For Windows environments there are two main options
     * Follow Linux instructions in the Ubuntu Bash environment.  Please not that install instructions should be executed from the repository directory.  Changing to a Windows directory (ie ```cd /mnt/c .....```) can result in installation issues, particularly for Windows directories that contain spaces.
-    
+
     * Use the docker container described [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/16cf4a78-4fc7-49e1-8621-3450ca938b77), which comes pre-configured with Ipopt.
 * [CppAD](https://www.coin-or.org/CppAD/)
   * Mac: `brew install cppad`
@@ -64,6 +64,14 @@ In addition, to display plots, an X-server must be running on the host and acces
      This error has been resolved by updrading ipopt with
      ```brew upgrade ipopt --with-openblas```
      per this [forum post](https://discussions.udacity.com/t/incorrect-checksum-for-freed-object/313433/19)
+
+*  ** I have experienced the following error when run ```./mpc``` **
+     ``` ./mpc: error while loading shared libraries: libcoinmumps.so.1: cannot open shared object file: No such file or directory
+     ```
+     I did the following steps to resolved the problem:
+     1. Download the "libcoinmumps.so.1" file from [here](https://forge.scilab.org/index.php/p/sci-ipopt/source/tree/87d40abff2e10dfa799dab2962e52179a2596cc1/thirdparty/Linux/lib/x64)
+     2. Drop it into the ```Ipopt-3.12.13\ThirdParty\Mumps``` directory
+     3. Run ```sudo /sbin/ldconfig -v```.   [reference url](https://itsfoss.com/solve-open-shared-object-file-quick-tip/)
 
 ** Useful Resources:**
 
