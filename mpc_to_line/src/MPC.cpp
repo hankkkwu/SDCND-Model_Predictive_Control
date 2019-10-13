@@ -9,6 +9,10 @@ using CppAD::AD;
 using Eigen::VectorXd;
 using std::vector;
 
+// Use Ipopt to Solve a Nonlinear Programming Problem:
+// This is a link for ipopt::solve() variables explaination:   https://www.coin-or.org/CppAD/Doc/ipopt_solve_get_started.cpp.htm#Purpose
+// This is an example link:  https://www.coin-or.org/CppAD/Doc/ipopt_solve.htm
+
 /**
  * TODO: Set N and dt
  */
@@ -126,33 +130,6 @@ class FG_eval {
 
       AD<double> f0 = coeffs[0] + coeffs[1] * x0;
       AD<double> desired_psi0 = coeffs[1];
-
-      /*
-      // Domain space vector : what can go into a function is called the Domain,
-      // In this case, x0 is the Domain
-      size_t n = 1;                 // number of domain space variables
-      vector<AD<double>> ax(n);   // vector of domain space variables
-      ax[0] = x0;                   // value at which function is recorded
-
-      // declare independent variables and start recording operation sequence
-      CppAD::Independent(ax);
-
-      // range space vector : what actually comes out of a function is called the Range
-      size_t m = 1;                 // number of ranges space variables
-      vector<AD<double>> ay(m);   // vector of ranges space variables
-      // record operations that compute ay[0]
-      ay[0] = coeffs[0] + coeffs[1] * x0 + coeffs[2] * pow(x0,2) + coeffs[3] * pow(x0,3);
-
-      // store operation sequence in f:x -> y and stop recording
-      CppAD::ADFun<double> f(ax, ay);
-
-      // compute derivative using operation sequence stored in f
-      vector<double> jac(m*n);   // Jacobian of f (m by n matrix)
-      vector<double> x(n);       // domain space vector
-      x[0] = x0;                 // argument value for computing derivative
-      jac = f.Jacobian(x);       // Jacobian for operation sequence
-      AD<double> desired_psi0 = CppAD::atan(jac[0]);
-      */
 
       // Here's `x` to get you started.
       // The idea here is to constraint this value to be 0.
@@ -284,6 +261,7 @@ std::vector<double> MPC::Solve(const VectorXd &x0, const VectorXd &coeffs) {
 
   auto cost = solution.obj_value;
   std::cout << "Cost " << cost << std::endl;
+
   return {solution.x[x_start + 1],   solution.x[y_start + 1],
           solution.x[psi_start + 1], solution.x[v_start + 1],
           solution.x[cte_start + 1], solution.x[epsi_start + 1],
